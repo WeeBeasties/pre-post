@@ -1,0 +1,48 @@
+---
+title: "Pre-Test Post-Test Report"
+author: "Dr. Clifton Franklund"
+date: "August 10, 2016"
+output: pdf_document
+---
+```{r copyright, include=FALSE}
+###########################################################################
+## report.Rmd
+##
+## An R script that uses de-identified pre- and post-test datasets from
+## Blackboard to evaluate student learning over a semester.
+##
+## Copyright by Dr. Clifton Franklund, 2016
+## Licensed under the MIT license:
+## http://www.opensource.org/licenses/mit-license.php
+###########################################################################
+```
+
+```{r packages, include=FALSE}
+# This chunk will load all needed packages for the report
+packages<-function(x){    
+	x<-as.character(match.call()[[2]])
+	if (!require(x,character.only=TRUE)){
+		install.packages(pkgs=x,repos="http://cran.r-project.org")
+		require(x,character.only=TRUE)
+	}
+}
+packages(ggplot2) 
+```
+
+## Introduction  
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+## Raw data files
+
+
+## Processed (de-identified) data files  
+
+
+## Results  
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Conclusions  
+
+## Proposed actions  
