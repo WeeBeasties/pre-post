@@ -2,6 +2,7 @@
 
 This project consists of a set of R scripts to process pre- and post-test results from my Blackboard courses. The files included in this project are:
 
+* **Codebook** --- A description of the fields present in each of the processed datasets
 * **LICENSE** --- The license file for the project as a whole
 * **pre-post.Rproj** --- The RStudio project file for this project
 * **PrePostQuestion.csv** --- A processed dataset of scores by question
