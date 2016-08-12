@@ -56,7 +56,7 @@ print(sessionInfo(), locale = FALSE)
 ```  
 
 ## Raw data files
-The raw data for this report was aggregated using a Blackboard quiz. A `r myItems`-question multiple-choice quiz was given during the first and last weeks of instruction. The questions were randomly drawn from a bank of `r length(questions$Questions) questions. The students were given five bonus points for attempting the quiz (to encourage participation) and another five bonus points if they scored at or above 75% correct (to encourage intellectual effort). The results of the pre- and post-tests were downloaded from the Blackboard grade center by selecting "download results" from the contextual menu for the appropriate grade columns. The download parameters used were:  
+The raw data for this report was aggregated using a Blackboard quiz. A `r myItems`-question multiple-choice quiz was given during the first and last weeks of instruction. The questions were randomly drawn from a bank of `r length(questions$Question)` questions. The students were given five bonus points for attempting the quiz (to encourage participation) and another five bonus points if they scored at or above 75% correct (to encourage intellectual effort). The results of the pre- and post-tests were downloaded from the Blackboard grade center by selecting "download results" from the contextual menu for the appropriate grade columns. The download parameters used were:  
 
 1) Tab-delimited 
 2) By Question and User
