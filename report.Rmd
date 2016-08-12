@@ -1,8 +1,11 @@
 ---
-title: "Pre-Test Post-Test Report"
+title: "Pre-Test / Post-Test Report"
 author: "Dr. Clifton Franklund"
-date: "August 10, 2016"
-output: pdf_document
+date: "August 2016"
+bibliography: references.bib
+output: 
+  pdf_document:
+    latex_engine: pdflatex
 ---
 ```{r copyright, include=FALSE}
 ###########################################################################
@@ -17,7 +20,7 @@ output: pdf_document
 ###########################################################################
 ```
 
-```{r packages, include=FALSE}
+```{r packages, echo=FALSE, message=FALSE}
 # This chunk will load all needed packages for the report
 packages<-function(x){    
 	x<-as.character(match.call()[[2]])
@@ -27,22 +30,146 @@ packages<-function(x){
 	}
 }
 packages(ggplot2) 
+packages(xtable)
 ```
+
+```{r data, echo=FALSE}
+# This chunk reads the de-identified data into data frames
+scores <- read.csv("PrePostScores.csv")
+questions <- read.csv("PrePostQuestions.csv")
+```
+
+```{r constants, echo=FALSE}
+myItems <- 40       # Define the number of questions on the pre- and post-exams
+```
+
 
 ## Introduction  
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is an R Markdown report that summarizes a pre-test / post-test analysis of student achievement at Ferris State University. This approach to assessment is commonly used to estimate student learning gains over a course. One recent example was a study of Social Statistics course [@Delucchi2014]. The actual data for this report were collected using Blackboard tests and analyzed using R. This report template can be used to rapidy create similar reports for additional courses in the future at Ferris or anywhere where Blackboard is used.  
+
+## Session information
+This document was generated using the R statistical language [@R] and the RStudio [@Rstudio] itegrated development environment (IDE). The systems settings used are listed below. You should be able to replicate this report using the .Rmd code and data files with a similarly configured computer. 
+
+```{r session, echo=FALSE, results='asis'}
+print(sessionInfo(), locale = FALSE)
+```  
 
 ## Raw data files
+The raw data for this report was aggregated using a Blackboard quiz. A `r myItems`-question multiple-choice quiz was given during the first and last weeks of instruction. The questions were randomly drawn from a bank of `r length(questions$Questions) questions. The students were given five bonus points for attempting the quiz (to encourage participation) and another five bonus points if they scored at or above 75% correct (to encourage intellectual effort). The results of the pre- and post-tests were downloaded from the Blackboard grade center by selecting "download results" from the contextual menu for the appropriate grade columns. The download parameters used were:  
 
+1) Tab-delimited 
+2) By Question and User
+3) Only Valid Attempts
+
+The downloaded files were opened in Microsoft Excel (for some reason, R on my Macintosh does not like the UTF-16 files that Blackboard makes). Using Excel, the files were then saved as comma-separated value (.csv) files - Pre-Course.csv and Post-Course.csv. These two files are the raw data necessary to generate this report. The original files are not shared in this project because they contain personally identifiable information about my students. If you provide your own files, they will be processed in place of my files and the resulting data will be used to create all of the graphs and tables in this document.
 
 ## Processed (de-identified) data files  
+An R script, process.R, was written to de-identify and summarize the data from the raw Blackboard files. When executed, this script removes all personally identifiable information and produces two new comma-separated data files - PrePostScores.csv and PrePostQuestions.csv.  
+
+**PrePostScores.csv** is a list containing scores by students for each student that completed both the pre- and post-exams. Rubric scores for the pre- and post-test performances were also generated based upon the following parameters:
+
+\begin{center}
+Table 1: Conversion percent correct to rubric scores
+\end{center}
+| Rubric |   Percent   |  Performance   |
+|:------:|:-----------:|:---------------|
+|    0   | 0 to 49.9%  | Unsatisfactory |
+|    1   | 50 to 59.9% | Beginning      |
+|    2   | 60 to 69.9% | Progressing    |
+|    3   | 70 to 84.5% | Proficient     |
+|    4   | 85 to 100%  | Advanced       |
+
+The variables included in the PrePostScores.csv file are:  
+
+* Pre --- The number of correct responses on the pre-test
+* Post --- The number of correct responses on the post-test
+* preRubric --- A rubric score based upon the percent correct on the pre-test
+* postRubric --- A rubric score based upon the percent correct on the post-test  
+
+**PrePostQuestions.csv** is another list containing information about the class' performance by question. The columns in this file include:  
+
+* Question --- The prompt text for each question
+* Pre --- The fraction of students that correctly answered the question on the pre-test
+* Pre.N --- The number of students that attempted the question on the pre-test
+* Post --- The fraction of students that correctly answered the question on the post-test
+* Post.N --- The number of students that attempted the question on the post-test
+* Diff --- The difference obtained by taking Post minus Pre
+
+## Results and Discussion 
+
+```{r ttest, echo=FALSE}
+scoreResults <- t.test(scores$Post,scores$Pre)
+rubricResults <- t.test(scores$postRubric, mu=2.6)
+```
+
+The overall distribution of scores for the pre- and post-tests are compared in Figure 1. A marked increase in scores for the post-test is observed compared to those of the pre-test. The average score for the pre-test is `r round(mean(scores$Pre),1)`, while the post-test average is `r round(mean(scores$Post),1)` points. This result is statistically significant (t=`r round(scoreResults$statistic,2)`, df=`r round(scoreResults$parameter,2)`, p=`r format(scoreResults$p.value, digits=2)`) as measured by a two-factor non-paired t-test. Pairing was not used so as to calculate a more accurate estimate of d. The effect size for the observed difference is medium (d=`r round(scoreResults$statistic/sqrt(scoreResults$parameter),2)`). Therefore, it is concluded that the class gained a significant and meaningful amount of knowledge over the course.  
+
+The post-test scores are also converted into standardized rubric scores as described in the methods. The average rubric score for the post-test was `r round(mean(scores$postRubric),2)`. This value falls short of the threshold score for proficiency (2.6). However, it is not significantly different from the threshold value (t=`r round(rubricResults$statistic,2)`, df=`r round(rubricResults$parameter,2)`, p=`r format(rubricResults$p.value, digits=2)`) as measured by a one-factor t-test. Moreover, the effect size of this difference is small (d=`r round(rubricResults$statistic/sqrt(rubricResults$parameter),2)`). We conclude that the average rubric scores approach, but do not yet meet, the threshold score for proficiency.
 
 
-## Results  
+```{r plots, echo = FALSE, fig.align='center', fig.height=3.4, fig.cap="Distribution of pre- and post-test scores. Left panel = smoothed density plot of scores showing marked positive skew for the pre-test and negative skew for the post-test results. Right panel = boxplots of the pre- and post-test scores. The post-test scores were much higher."}
+par(mfrow=c(1,2)) 
+plot (density(scores$Pre, adjust = 2), col = "firebrick", las = 1, xlab = "Score", xlim = c(0,myItems), 
+      main = "", ylab = "Density", ylim = c(0,0.07))
+lines(density(scores$Post, adjust = 2), col = "dodgerblue")
+polygon(density(scores$Pre, adjust = 2),col=adjustcolor("firebrick", alpha.f = 0.7))
+polygon(density(scores$Post, adjust = 2),col=adjustcolor("dodgerblue", alpha.f = 0.7))
+legend(0,0.065, c("Pre-Test","Post-Test"), cex = 0.75, lty=c(1,1), lwd = 6, 
+       col=c(adjustcolor("firebrick", alpha.f = 0.7), adjustcolor("dodgerblue", alpha.f = 0.7)))
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+boxplot(scores$Pre, scores$Post, horizontal = TRUE, names = c("Pre-test","Post-test"),
+	col = c(adjustcolor("firebrick", alpha.f = 0.7),adjustcolor("dodgerblue", alpha.f = 0.7)), 
+	pars = list(boxwex = 0.5, staplewex = 1, outwex = 0.5),
+	ylim = c(0, myItems), xlab = "Score",
+	notch = TRUE, whisklty = 1, staplelty = 0) 
+```
+
+The gain of knowledge in this course can also be estimated by comparing the number of proficient test scores (rubric scores of 3 or 4) between the pre- and post-tests. These results are summarized in Table 2.
+
+\begin{center}
+Table 2: Effect of taking the class on exam proficiency rates.  
+\end{center}
+|    Test    |          Proficient            |        Not Proficient         |            Total              |
+|:----------:|:------------------------------:|:-----------------------------:|:-----------------------------:|  
+|  Pre-test  |  `r sum(scores$preRubric>=3)`  |  `r sum(scores$preRubric<3)`  | `r length(scores$preRubric)`  | 
+|  Post-test |  `r sum(scores$postRubric>=3)` |  `r sum(scores$postRubric<3)` | `r length(scores$postRubric)` |  
+
+Based upon these results, it is estimated that students are `r round((sum(scores$postRubric>=3)/length(scores$postRubric))/(sum(scores$preRubric>=3)/length(scores$preRubric)),2)` times more likely to be proficient in the post-test as compared to the pre-test. Although this is an impressive gain, only `r round(sum(scores$postRubric>=3)/length(scores$postRubric)*100,1)`% of the class scored "proficient" or better on the post-test. This is lower than desired and reflects the low average rubric scores.
+
+The questions dataset was also used to compare question performance on the pre- and post-tests. The results of these comparisons are shown in Figure 2. The prediction is that the questions will vary in difficulty, but all show approximately the same gains from pre- to post-test. Therefore, they should form a linear relationship.
+
+```{r scatterplot, fig.height=4, echo=FALSE, fig.cap="Scatterplot of pre-test vs post-test performance by question. The solid red line is the best linear fit to the data. The broken gray line represents no difference between pre- and post-test performance."}
+myModel <- lm(questions$Post~questions$Pre)
+
+plot(questions$Post~questions$Pre, las=2, 
+     xlab="Pre-test (fraction correct)", 
+     ylab="Post-test (fraction correct)",
+     xlim=c(0,1), ylim=c(0,1), main="",
+     col=adjustcolor("dodgerblue", alpha.f = 0.7),
+     pch=16)
+
+abline(myModel, col=adjustcolor("firebrick", alpha.f = 0.7), lty=1, lwd=2)
+abline(c(0,0),c(1,1), col=adjustcolor("gray50", alpha.f = 0.7), lty=2, lwd=2)
+```
+
+\newpage{}
+The best linear fit reveals that there was substantial improvement in performance for the many of the more difficult pre-test items. This causes the slope to be shallower than 1 (slope = `r round(myModel$coefficients[2],2)`). The fit of the linear regression is moderately good as well ($r^2$=`r round(summary(myModel)$r.squared,2)`). There were about 15 or 16 questions that did not improve from pre-test to post-test. These need to be identified and examined.  
 
 ## Conclusions  
+A total of `r length(scores$Pre)` students took both the pre- and post-test assignments. These tests consisted of `r myItems` multiple-choice items randomly drawn from a pool of `r length(questions$Pre)` questions. The average scores on the pre-test and post-test were `r round(mean(scores$Pre),1)` and `r round(mean(scores$Post),1)`, respectively. The difference between these scores is statistically significant (t=`r round(scoreResults$statistic,2)`, df=`r round(scoreResults$parameter,2)`, p=`r format(scoreResults$p.value, digits=2)`) and the effect size for the observed difference is medium (d=`r round(scoreResults$statistic/sqrt(scoreResults$parameter),2)`). The average converted rubric score for the post-test is `r round(mean(scores$postRubric),2)`. This is below the criterion of proficiency (2.6), but is not significantly different (t=`r round(rubricResults$statistic,2)`, df=`r round(rubricResults$parameter,2)`, p=`r format(rubricResults$p.value, digits=2)`). Based upon the pre-test and post-test rubric scores, students are `r round((sum(scores$postRubric>=3)/length(scores$postRubric))/(sum(scores$preRubric>=3)/length(scores$preRubric)),2)` times more likely to test as proficient at the end of the course than at the beginning. Although substantial learning has occured, only `r round(sum(scores$postRubric>=3)/length(scores$postRubric)*100,1)`% of the class scored "proficient" or better on the post-test. Over a dozen exam items did not exhibit improvements in performance between the pre-test and post-test administration. 
 
 ## Proposed actions  
+
+* Examine the exam items to determine which questions did not improve over time.
+* Possibly delete, edit, or replace defective items
+* Determine if pattern exists between lecture module and question difficulty
+* Examine scores for outliers and determine their causes and impact on this analysis
+* No changes to pedagogy are proposed at this time.
+
+## Reuse and distribution of these materials  
+All of the de-identified data, analysis code, and documentation that constitute this report project may be freely used, modified, and shared. The code files (process.R and report.Rmd) are released under the [\underline{MIT license}](https://opensource.org/licenses/MIT). The de-identified dataseta (PrePostScores.csv and PrePostQuestions.csv) are released under the Creative Commons [\underline{CC0 license}](https://creativecommons.org/publicdomain/zero/1.0/). All documention (including README.md, Codebook.md, and this report) are releaseed under the Creative Commons [\underline{CC-BY}](https://creativecommons.org/licenses/by/4.0/) licence. Any questions, comments, or suggestions may be sent to [\underline{Dr. Franklund}](mailto:CliftonFranklund@ferris.edu).
+
+## References
+
+

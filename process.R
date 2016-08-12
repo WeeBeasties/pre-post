@@ -20,7 +20,7 @@ packages<-function(x){                     # Install and load any packages neede
 
 packages(dplyr)                            # Used to manipulate the data
 
-
+numPoints <- 40                            # Define the number of questions in the instrument used
 
 preData <- read.csv("Pre-Course.csv")      # Read in Blackboard file
 preScore <- preData %>%
@@ -38,6 +38,18 @@ PrePost <- merge(preScore, postScore, by = "Username")  # combine the data
 
 PrePost <- PrePost %>%                   # de-identify
 	arrange(desc(Post))
+
+# Create a rubric scores based on the test results
+PrePost$preRubric <- ifelse(PrePost$Pre>=0.85*numPoints,4,
+			     ifelse(PrePost$Pre>=0.70*numPoints,3,
+			            ifelse(PrePost$Pre>=0.60*numPoints,2,
+			                   ifelse(PrePost$Pre>=0.50*numPoints,1,0))))
+
+PrePost$postRubric <- ifelse(PrePost$Post>=0.85*numPoints,4,
+			     ifelse(PrePost$Post>=0.70*numPoints,3,
+			            ifelse(PrePost$Post>=0.60*numPoints,2,
+			                   ifelse(PrePost$Post>=0.50*numPoints,1,0))))
+
 PrePost$Username <- NULL
 write.csv(PrePost, file = "PrePostScores.csv", row.names = FALSE) # Write out file
 
