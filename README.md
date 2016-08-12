@@ -17,5 +17,5 @@ The sequence of events
 
 1) Save pre-test and post-test output from Blackboard in this folder as "Pre-Course.csv" and "Post-Course.csv"  
 2) Run process.R to generate PrePostScores.csv and PrePostQuestions.csv  
-3) Open report.Rmd and knit to PDF to generate report.pdf
+3) Open report.Rmd and knit to PDF to generate report.pdf  
 4) Edit the report.Rmd file to describe your results and re-knit the report file.
