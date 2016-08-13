@@ -111,7 +111,7 @@ The post-test scores are also converted into standardized rubric scores as descr
 ```{r plots, echo = FALSE, fig.align='center', fig.height=3.4, fig.cap="Distribution of pre- and post-test scores. Left panel = smoothed density plot of scores showing marked positive skew for the pre-test and negative skew for the post-test results. Right panel = boxplots of the pre- and post-test scores. The post-test scores were much higher."}
 par(mfrow=c(1,2)) 
 plot (density(scores$Pre, adjust = 2), col = "firebrick", las = 1, xlab = "Score", xlim = c(0,myItems), 
-      main = "", ylab = "Density", ylim = c(0,0.07))
+      cex.axis=0.8, main = "", ylab = "Density", ylim = c(0,0.07))
 lines(density(scores$Post, adjust = 2), col = "dodgerblue")
 polygon(density(scores$Pre, adjust = 2),col=adjustcolor("firebrick", alpha.f = 0.7))
 polygon(density(scores$Post, adjust = 2),col=adjustcolor("dodgerblue", alpha.f = 0.7))
@@ -121,7 +121,7 @@ legend(0,0.065, c("Pre-Test","Post-Test"), cex = 0.75, lty=c(1,1), lwd = 6,
 boxplot(scores$Pre, scores$Post, horizontal = TRUE, names = c("Pre-test","Post-test"),
 	col = c(adjustcolor("firebrick", alpha.f = 0.7),adjustcolor("dodgerblue", alpha.f = 0.7)), 
 	pars = list(boxwex = 0.5, staplewex = 1, outwex = 0.5),
-	ylim = c(0, myItems), xlab = "Score",
+	cex.axis=0.8, ylim = c(0, myItems), xlab = "Score", ylas=2,
 	notch = TRUE, whisklty = 1, staplelty = 0) 
 ```
 
