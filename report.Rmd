@@ -1,7 +1,7 @@
 ---
 title: "Pre-Test / Post-Test Report"
 author: "Dr. Clifton Franklund"
-date: "Spring 2016"
+date: "Spring 2017"
 bibliography: references.bib
 output: 
   pdf_document:
@@ -35,8 +35,8 @@ packages(xtable)
 
 ```{r data, echo=FALSE}
 # This chunk reads the de-identified data into data frames
-scores <- read.csv("201601_PrePostScores.csv")
-questions <- read.csv("201601_PrePostQuestions.csv")
+scores <- read.csv("201701_PrePostScores.csv")
+questions <- read.csv("201701_PrePostQuestions.csv")
 ```
 
 ```{r constants, echo=FALSE}
@@ -154,14 +154,15 @@ abline(c(0,0),c(1,1), col=adjustcolor("gray50", alpha.f = 0.7), lty=2, lwd=2)
 ```
 
 \newpage{}
-The best linear fit reveals that there was substantial improvement in performance for the many of the more difficult pre-test items. This causes the slope to be shallower than 1 (slope = `r round(myModel$coefficients[2],2)`). The fit of the linear regression is moderately good as well ($r^2$=`r round(summary(myModel)$r.squared,2)`). There were about 15 or 16 questions that did not improve from pre-test to post-test. These need to be identified and examined.  
+The best linear fit reveals that there was substantial improvement in performance for the many of the more difficult pre-test items. This causes the slope to be shallower than 1 (slope = `r round(myModel$coefficients[2],2)`). The fit of the linear regression is moderately good as well ($r^2$=`r round(summary(myModel)$r.squared,2)`). There were about 10 or 12 questions that did not improve from pre-test to post-test. These need to be identified and examined.  
 
 ## Conclusions  
-A total of `r length(scores$Pre)` students took both the pre- and post-test assignments. These tests consisted of `r myItems` multiple-choice items randomly drawn from a pool of `r length(questions$Pre)` questions. The average scores on the pre-test and post-test were `r round(mean(scores$Pre),1)` and `r round(mean(scores$Post),1)`, respectively. The difference between these scores is statistically significant (t=`r round(scoreResults$statistic,2)`, df=`r round(scoreResults$parameter,2)`, p=`r format(scoreResults$p.value, digits=2)`) and the effect size for the observed difference is medium (d=`r round(scoreResults$statistic/sqrt(scoreResults$parameter),2)`). The average converted rubric score for the post-test is `r round(mean(scores$postRubric),2)`. This is below the criterion of proficiency (2.6), but is not significantly different (t=`r round(rubricResults$statistic,2)`, df=`r round(rubricResults$parameter,2)`, p=`r format(rubricResults$p.value, digits=2)`). Based upon the pre-test and post-test rubric scores, students are `r round((sum(scores$postRubric>=3)/length(scores$postRubric))/(sum(scores$preRubric>=3)/length(scores$preRubric)),2)` times more likely to test as proficient at the end of the course than at the beginning. Although substantial learning has occured, only `r round(sum(scores$postRubric>=3)/length(scores$postRubric)*100,1)`% of the class scored "proficient" or better on the post-test. Over a dozen exam items did not exhibit improvements in performance between the pre-test and post-test administration. 
+A total of `r length(scores$Pre)` students took both the pre- and post-test assignments. These tests consisted of `r myItems` multiple-choice items randomly drawn from a pool of `r length(questions$Pre)` questions. The average scores on the pre-test and post-test were `r round(mean(scores$Pre),1)` and `r round(mean(scores$Post),1)`, respectively. The difference between these scores is statistically significant (t=`r round(scoreResults$statistic,2)`, df=`r round(scoreResults$parameter,2)`, p=`r format(scoreResults$p.value, digits=2)`) and the effect size for the observed difference is medium (d=`r round(scoreResults$statistic/sqrt(scoreResults$parameter),2)`). The average converted rubric score for the post-test is `r round(mean(scores$postRubric),2)`. This is below the criterion of proficiency (2.6), but is not significantly different (t=`r round(rubricResults$statistic,2)`, df=`r round(rubricResults$parameter,2)`, p=`r format(rubricResults$p.value, digits=2)`). Based upon the pre-test and post-test rubric scores, students are `r round((sum(scores$postRubric>=3)/length(scores$postRubric))/(sum(scores$preRubric>=3)/length(scores$preRubric)),2)` times more likely to test as proficient at the end of the course than at the beginning. Although substantial learning has occured, only `r round(sum(scores$postRubric>=3)/length(scores$postRubric)*100,1)`% of the class scored "proficient" or better on the post-test. About a dozen exam items did not exhibit improvements in performance between the pre-test and post-test administration. These results are very similar to those from one year ago.  
 
 ## Proposed actions  
 
 * Examine the exam items to determine which questions did not improve over time.
+* Compare items that did not improve between different semesters to see if there is a pattern.
 * Possibly delete, edit, or replace defective items
 * Determine if pattern exists between lecture module and question difficulty
 * Examine scores for outliers and determine their causes and impact on this analysis
