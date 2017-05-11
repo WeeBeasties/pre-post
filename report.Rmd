@@ -1,7 +1,7 @@
 ---
 title: "Pre-Test / Post-Test Report"
 author: "Dr. Clifton Franklund"
-date: "August 2016"
+date: "Spring 2016"
 bibliography: references.bib
 output: 
   pdf_document:
@@ -35,8 +35,8 @@ packages(xtable)
 
 ```{r data, echo=FALSE}
 # This chunk reads the de-identified data into data frames
-scores <- read.csv("PrePostScores.csv")
-questions <- read.csv("PrePostQuestions.csv")
+scores <- read.csv("201601_PrePostScores.csv")
+questions <- read.csv("201601_PrePostQuestions.csv")
 ```
 
 ```{r constants, echo=FALSE}
@@ -77,7 +77,7 @@ Table 1: Conversion percent correct to rubric scores
 |    0   | 0 to 49.9%  | Unsatisfactory |
 |    1   | 50 to 59.9% | Beginning      |
 |    2   | 60 to 69.9% | Progressing    |
-|    3   | 70 to 84.5% | Proficient     |
+|    3   | 70 to 84.9% | Proficient     |
 |    4   | 85 to 100%  | Advanced       |
 
 The variables included in the PrePostScores.csv file are:  

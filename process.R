@@ -10,7 +10,7 @@
 ###########################################################################
 
 
-packages<-function(x){                     # Install and load any packages needed
+packages<-function(x){
 	x<-as.character(match.call()[[2]])
 	if (!require(x,character.only=TRUE)){
 		install.packages(pkgs=x,repos="http://cran.r-project.org")
@@ -18,17 +18,17 @@ packages<-function(x){                     # Install and load any packages neede
 	}
 }
 
-packages(dplyr)                            # Used to manipulate the data
+library(dplyr)                            # Used to manipulate the data
 
 numPoints <- 40                            # Define the number of questions in the instrument used
 
-preData <- read.csv("Pre-Course.csv")      # Read in Blackboard file
+preData <- read.csv("201701_Pre-Course.csv")      # Read in Blackboard file
 preScore <- preData %>%
 	group_by(Username) %>%
 	summarise(Pre = sum(Auto.Score)) %>%
 	filter(Pre > 0)                   # Pre-test score by student
 
-postData <- read.csv("Post-Course.csv")   # Read in Blackboard file
+postData <- read.csv("201701_Post-Course.csv")   # Read in Blackboard file
 postScore <- postData %>%
 	group_by(Username) %>%
 	summarise(Post = sum(Auto.Score)) %>%
@@ -51,7 +51,7 @@ PrePost$postRubric <- ifelse(PrePost$Post>=0.85*numPoints,4,
 			                   ifelse(PrePost$Post>=0.50*numPoints,1,0))))
 
 PrePost$Username <- NULL
-write.csv(PrePost, file = "PrePostScores.csv", row.names = FALSE) # Write out file
+write.csv(PrePost, file = "201701_PrePostScores.csv", row.names = FALSE) # Write out file
 
 
 
@@ -69,4 +69,4 @@ PrePostQuestions <- PrePostQuestions %>% # Determining differences by question
 	mutate(Diff = Post - Pre) %>%
 	arrange(desc(Diff))
 
-write.csv(PrePostQuestions, file = "PrePostQuestions.csv", row.names = FALSE) # Write out file
+write.csv(PrePostQuestions, file = "201701_PrePostQuestions.csv", row.names = FALSE) # Write out file
